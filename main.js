@@ -1,4 +1,6 @@
 
+import { analyzePillImage } from './ai.js';
+
 class PillResult extends HTMLElement {
   constructor() {
     super();
@@ -145,14 +147,14 @@ class PillReferences extends HTMLElement {
         }
       </style>
       <div class="references-container">
-        <h4>'타이레놀정 500밀리그람' 관련 자료</h4>
+        <h4 id="referenceTitle"></h4>
         <div class="image-gallery">
-          <img src="https://www.health.kr/images/id_image/k_000001.jpg" alt="Reference Image 1">
-          <img src="https://www.health.kr/images/id_image/k_000001.jpg" alt="Reference Image 2">
-          <img src="https://www.health.kr/images/id_image/k_000001.jpg" alt="Reference Image 3">
+          <img class="ref-image" src="" alt="Reference Image 1">
+          <img class="ref-image" src="" alt="Reference Image 2">
+          <img class="ref-image" src="" alt="Reference Image 3">
         </div>
         <div class="description-box">
-            <p>아세트아미노펜(acetaminophen)은 해열 및 진통 작용을 하는 약물입니다. 주로 감기로 인한 발열 및 통증, 두통, 치통, 근육통 등의 완화에 사용됩니다. 의사의 처방 없이 약국에서 구매할 수 있는 일반의약품입니다.</p>
+            <p id="descriptionText"></p>
         </div>
         <a id="googleSearchLink" class="external-link" href="#" target="_blank" rel="noopener noreferrer">
             Google 이미지에서 더 보기
@@ -162,21 +164,19 @@ class PillReferences extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['pill-name', 'image-src'];
+    return ['pill-name', 'image-src', 'description'];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'pill-name') {
-      const title = this.shadowRoot.querySelector('h4');
-      const googleLink = this.shadowRoot.querySelector('#googleSearchLink');
-      const encodedPillName = encodeURIComponent(newValue);
-      
-      title.textContent = `'${newValue}' 관련 자료`;
-      googleLink.href = `https://www.google.com/search?q=${encodedPillName}&tbm=isch`;
+      this.shadowRoot.querySelector('#referenceTitle').textContent = `'${newValue}' 관련 자료`;
+      this.shadowRoot.querySelector('#googleSearchLink').href = `https://www.google.com/search?q=${encodeURIComponent(newValue)}&tbm=isch`;
     }
     if (name === 'image-src') {
-        const images = this.shadowRoot.querySelectorAll('.image-gallery img');
-        images.forEach(img => img.src = newValue);
+        this.shadowRoot.querySelectorAll('.ref-image').forEach(img => img.src = newValue);
+    }
+    if (name === 'description') {
+        this.shadowRoot.querySelector('#descriptionText').textContent = newValue;
     }
   }
 }
@@ -289,7 +289,16 @@ class PillIdentifier extends HTMLElement {
     const openFileDialog = () => fileInput.click();
 
     uploadButton.addEventListener('click', openFileDialog);
-    rescanButton.addEventListener('click', openFileDialog);
+    rescanButton.addEventListener('click', () => {
+        // Reset UI for re-selection
+        fileInput.value = ''; // Clear the selected file
+        previewContainer.style.display = 'none';
+        analysisControls.style.display = 'none';
+        resultContainer.innerHTML = '';
+        uploadButton.style.display = 'inline-block';
+        statusText.textContent = '분석할 알약 이미지를 선택하세요.';
+        openFileDialog();
+    });
 
     fileInput.addEventListener('change', (event) => {
       const file = event.target.files[0];
@@ -302,41 +311,40 @@ class PillIdentifier extends HTMLElement {
         analysisControls.style.display = 'flex';
         resultContainer.innerHTML = '';
         analyzeButton.disabled = false;
+        analyzeButton.style.display = 'inline-block';
+        rescanButton.textContent = '다시 선택';
       }
     });
 
-    analyzeButton.addEventListener('click', () => {
+    analyzeButton.addEventListener('click', async () => { // Make this async
         statusText.textContent = 'AI가 이미지를 분석 중입니다...';
         analyzeButton.disabled = true;
+        rescanButton.disabled = true;
         scannerLine.style.animationDuration = '0.5s';
 
-        setTimeout(() => {
-            previewContainer.style.display = 'none';
-            statusText.textContent = '분석 완료!';
-            
-            // Mock Data
-            const mockData = {
-                imageSrc: 'https://www.health.kr/images/id_image/k_000001.jpg',
-                pillName: '타이레놀정 500밀리그람',
-                ingredient: '아세트아미노펜 500mg',
-                company: '한국얀센'
-            };
+        // --- New: Call the AI module ---
+        const detectedPill = await analyzePillImage(imagePreview.src);
 
-            // Create and append result card
-            const result = document.createElement('pill-result');
-            result.setAttribute('image-src', mockData.imageSrc);
-            result.setAttribute('pill-name', mockData.pillName);
-            result.setAttribute('ingredient', mockData.ingredient);
-            result.setAttribute('company', mockData.company);
-            resultContainer.appendChild(result);
+        previewContainer.style.display = 'none';
+        statusText.textContent = '분석 완료!';
+        analyzeButton.style.display = 'none'; // Hide analyze button
+        rescanButton.disabled = false;
+        rescanButton.textContent = '새로운 분석하기'; // Change text for clarity
 
-            // Create and append reference card
-            const references = document.createElement('pill-references');
-            references.setAttribute('pill-name', mockData.pillName);
-            references.setAttribute('image-src', mockData.imageSrc);
-            resultContainer.appendChild(references);
+        // Create and append result card
+        const result = document.createElement('pill-result');
+        result.setAttribute('image-src', detectedPill.imageSrc);
+        result.setAttribute('pill-name', detectedPill.pillName);
+        result.setAttribute('ingredient', detectedPill.ingredient);
+        result.setAttribute('company', detectedPill.company);
+        resultContainer.appendChild(result);
 
-        }, 2500);
+        // Create and append reference card
+        const references = document.createElement('pill-references');
+        references.setAttribute('pill-name', detectedPill.pillName);
+        references.setAttribute('image-src', detectedPill.imageSrc);
+        references.setAttribute('description', detectedPill.description);
+        resultContainer.appendChild(references);
     });
   }
 }
