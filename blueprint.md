@@ -1,9 +1,9 @@
 
-# Project Blueprint - PillIdent (알약 식별 서비스)
+# Project Blueprint - Pillident (알약 식별 서비스)
 
 ## Overview
 
-PillIdent은 모던 웹 기술(Web Components, CSS Layer/Variables, ES Modules)을 활용하여 사용자가 알약 사진을 촬영하거나 업로드하여 쉽고 신속하게 알약을 식별할 수 있도록 돕는 웹 애플리케이션입니다. 
+Pillident은 모던 웹 기술(Web Components, CSS Layer/Variables, ES Modules)을 활용하여 사용자가 알약 사진을 촬영하거나 업로드하여 쉽고 신속하게 알약을 식별할 수 있도록 돕는 웹 애플리케이션입니다. 
 
 ## Design and Features
 
