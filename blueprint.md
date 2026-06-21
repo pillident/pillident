@@ -1,30 +1,38 @@
-# Project Blueprint
+# Project Blueprint - PillIdent (알약 식별 서비스)
 
 ## Overview
 
-A modern, visually appealing, and interactive single-page application. The goal is to create a delightful user experience using modern web standards, including Web Components, modern CSS, and ES Modules.
+PillIdent은 모던 웹 기술(Web Components, CSS Layer/Variables, ES Modules)을 활용하여 사용자가 알약 사진을 촬영하거나 업로드하여 쉽고 신속하게 알약을 식별할 수 있도록 돕는 웹 애플리케이션입니다. 
 
-## Design and Features (V1 - Initial)
+## Design and Features
 
 ### Aesthetics & Style
-*   **Color Palette:** A vibrant and energetic look and feel with a wide range of hues.
-*   **Typography:** Expressive and relevant fonts to guide the user's attention. Hero text will be large and impactful.
-*   **Background:** A subtle noise texture will be applied to the main background for a premium, tactile feel.
-*   **Depth & Effects:** Multi-layered drop shadows on elements to create a sense of depth. Interactive elements will have a "glow" effect.
-*   **Iconography:** Icons will be used to enhance understanding and navigation.
+*   **Color Palette:** 프리미엄 느낌의 딥 블루, 비브란트 일렉트릭 블루, 부드러운 그라데이션 및 글로우 효과.
+*   **Background:** 눈이 편안하며 고급스러운 다크/블루 톤 그라데이션과 미세한 노이즈 패턴 텍스처 백그라운드 적용.
+*   **Visual Effects:** 요소들의 경계를 명확하게 해주는 미세한 마이크로-보더, 다층 드롭 섀도우(Deep soft shadow) 및 반응형 네온 글로우 효과.
+*   **Iconography:** 사용자 직관성을 돕는 정교하고 아름다운 SVG 아이콘 활용.
 
 ### Features
-*   **Interactive Welcome Element:** A central UI component that invites user interaction.
-*   **Responsive Design:** The layout will adapt seamlessly to all screen sizes, from mobile to desktop.
-*   **Accessibility (A11Y):** The application will be built with accessibility in mind from the start.
+1.  **메인 히어로 세션:** 알약 식별의 목적을 나타내는 멋진 타이포그래피 타이틀과 설명.
+2.  **알약 식별 컴포넌트 (`<pill-identifier>`):**
+    *   **사진 업로드/촬영 활성화 버튼:** 모바일 카메라 연동 및 이미지 선택 창을 열어주는 감각적인 글로우 버튼.
+    *   **이미지 프리뷰 영역:** 선택된 이미지를 깔끔한 둥근 카드 형태로 배치.
+    *   **스캔 레이저 애니메이션:** 이미지가 로드되면 자동으로 세련된 일렉트릭 블루 색상의 스캐닝 레이저 라인이 위아래로 움직이며 분석 중인 느낌의 고품질 피드백 선사.
+    *   **상태 피드백:** 파일이 준비되었을 때 "분석 준비 완료" 상태 및 다시 촬영/선택할 수 있는 제어 버튼 제공.
 
-## Current Plan: V1 Kick-off
+---
 
-**Objective:** Transform the basic "Hello, world!" page into a stylish, interactive welcome page.
+## Current Plan: V2 - Photo Upload & Preview
+
+**Objective:** 사용자가 알약 사진을 업로드하거나 모바일 카메라로 직접 촬영하여, 화면에서 스캐닝 애니메이션 효과가 들어간 고품질 이미지 프리뷰를 확인할 수 있는 기능을 구현합니다.
 
 **Steps:**
-1.  **[Done]** Create this `blueprint.md` file.
-2.  **[Next]** Refactor the HTML structure in `index.html` for better semantics and to include a new custom element.
-3.  **[Next]** Create a `style.css` file with modern CSS, including custom properties, a background texture, and styles for interactive elements.
-4.  **[Next]** Create a `main.js` file to define the first Web Component, an interactive button or card.
-5.  **[Next]** Implement the "glow" effect and other visual polishes.
+1.  **[Next]** `index.html`을 수정하여 기본 환영 카드 대신 새롭게 정의할 `<pill-identifier>` 커스텀 엘리먼트를 메인 영역에 배치하고, 아름다운 히어로 문구를 다듬습니다.
+2.  **[Next]** `main.js`에 `<pill-identifier>` 웹 컴포넌트를 구현합니다.
+    *   내부에 파일 입력용 `<input type="file">` (카메라 전용 속성 포함) 배치.
+    *   클릭 이벤트를 받아 파일 브라우저/카메라를 연동하고 이미지를 프리뷰용 `objectURL`로 생성.
+    *   이미지가 선택되었을 때 레이저 가이드가 위아래로 반복 이동하는 스캐닝 애니메이션 돔 구조 생성.
+3.  **[Next]** `style.css` 혹은 웹 컴포넌트 내부 섀도우 돔 스타일을 강화합니다.
+    *   스캔 가이드라인 가상 요소 및 애니메이션 키프레임 정의 (`@keyframes scan`).
+    *   네온 글로우 스타일, 그라데이션 버튼, 부드러운 호버 전환 효과 구현.
+4.  **[Next]** 브라우저 프리뷰 및 에러 여부를 모니터링하여 최종 검수합니다.

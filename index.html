@@ -1,25 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Welcome Page</title>
+    <title>PillIdent - 인공지능 알약 식별 및 분석</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <link rel="stylesheet" href="style.css">
     <script src="main.js" type="module" defer></script>
 </head>
 <body>
-    <header>
-        <h1>Welcome to Your Interactive Space</h1>
-    </header>
-    <main>
-        <p>This is a demonstration of what I can build. Below is an interactive element.</p>
-        <interactive-card 
-            title="Hello, Developer!" 
-            message="Click me to see a little bit of magic.">
-        </interactive-card>
-    </main>
-    <footer>
-        <p>Built with Gemini</p>
-    </footer>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <!-- Beautiful SVG representing a Pill capsule + scanning laser -->
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="5" y="5" width="14" height="14" rx="7" transform="rotate(-45 5 5)" stroke="#ffffff" stroke-width="2.5" stroke-linejoin="round"/>
+                    <line x1="4" y1="12" x2="20" y2="12" stroke="#60a5fa" stroke-width="2" stroke-dasharray="2 2"/>
+                    <circle cx="12" cy="12" r="2" fill="#3b82f6"/>
+                </svg>
+            </div>
+            <h1>PillIdent</h1>
+            <p>사진 촬영 한 번으로 알약을 즉시 식별하고 정보를 확인하세요. 모양, 색상, 표면 인쇄를 분석해 알맞은 의약품을 매칭합니다.</p>
+        </header>
+        
+        <main>
+            <pill-identifier></pill-identifier>
+        </main>
+        
+        <footer>
+            <p>© 2026 PillIdent. Built with modern Web Components & Gemini.</p>
+        </footer>
+    </div>
 </body>
 </html>
+
+
+
+
